@@ -181,7 +181,7 @@ public class App extends PApplet {
         } else {
             textSize(50);
             fill(255, 0, 0);  // Set the text color to red
-            text("YOU LOST", BOARD_WIDTH * CELLSIZE/ 2, BOARD_WIDTH * CELLSIZE / 2);
+            text("YOU LOST", BOARD_WIDTH * CELLSIZE / 2, BOARD_WIDTH * CELLSIZE / 2);
         }
 
 
