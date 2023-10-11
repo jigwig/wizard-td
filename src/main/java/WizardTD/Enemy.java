@@ -1,8 +1,7 @@
 package WizardTD;
 
 import java.util.*;
-import processing.core.PImage;
-import processing.core.PVector;
+import processing.core.*;
 
 public class Enemy {
     private App app;
@@ -16,8 +15,10 @@ public class Enemy {
     private List<PVector> path;
     private int pathIndex;
     private boolean isDead;
-    private int deathFrame;
-    private int deathFrameCount;
+    private List<PImage> deathAnimationFrames;
+    private int deathAnimationFrameCounter = 0;
+    private PVector deathPosition;
+    
 
     public Enemy(App app, PImage image, String type, float spawnX, float spawnY, float health, float speed, float armour, float manaGainedOnKill, List<PVector> path) {
         this.app = app;
@@ -30,6 +31,18 @@ public class Enemy {
         this.manaGainedOnKill = manaGainedOnKill;
         this.path = path;
         this.pathIndex = 1;
+        this.deathAnimationFrames = new ArrayList<>();
+
+        if ("gremlin".equals(type)) {
+            this.deathAnimationFrames.add(app.gremlinDeathImg1);
+            this.deathAnimationFrames.add(app.gremlinDeathImg2);
+            this.deathAnimationFrames.add(app.gremlinDeathImg3);
+            this.deathAnimationFrames.add(app.gremlinDeathImg4);
+            this.deathAnimationFrames.add(app.gremlinDeathImg5);
+        }
+
+
+
         
         
     }
@@ -67,10 +80,10 @@ public class Enemy {
     
 
     public void takeDamage(float damage) {
-        System.out.println("asd" + armour);
+        // System.out.println("asd" + armour);
         float actualDamage = (damage * armour); // Damage scaled by armour
         this.health -= actualDamage; // Deduct the actual damage from health
-        System.out.println("Damage Taken: " + actualDamage + " New Health: " + this.health);  // Debug line
+        // System.out.println("Damage Taken: " + actualDamage + " New Health: " + this.health);  // Debug line
     
         if (this.health <= 0) {
             this.health = 0;
@@ -78,20 +91,33 @@ public class Enemy {
         }
     }
 
-    private void die() {
-        // Handle enemy death logic here.
-        // For example, award the player with some mana.
-        app.manaSystem.addMana(manaGainedOnKill);
+    public void die() {
+        deathPosition = position.copy();
+        app.manaSystem.addMana(MonsterConfig.manaGainedOnKill);  // Use the global variable here
+        System.out.println(MonsterConfig.manaGainedOnKill);
         isDead = true;
     }
+
+    public boolean isDeathAnimationOver() {
+        return isDead && deathAnimationFrameCounter >= deathAnimationFrames.size() * 4;
+    }
+
 
     public boolean isDead() {
         return isDead;
     }
 
     public void draw() {
-        app.image(image, position.x, position.y);
-        drawHealthBar();
+        if (isDead) {
+            if (deathAnimationFrameCounter < deathAnimationFrames.size() * 4) {
+                PImage frameToShow = deathAnimationFrames.get(deathAnimationFrameCounter / 4);
+                app.image(frameToShow, deathPosition.x, deathPosition.y);
+                deathAnimationFrameCounter++;
+            }
+        } else {
+            app.image(image, position.x, position.y);
+            drawHealthBar();
+        }
     }
 
     private void drawHealthBar() {

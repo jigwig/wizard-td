@@ -6,7 +6,7 @@ public class MonsterConfig {
     private float hp;
     private float speed;
     private float armour;
-    private float manaGainedOnKill;
+    public static float manaGainedOnKill;
     private int quantity;
 
     public MonsterConfig(String type, float hp, float speed, float armour, float manaGainedOnKill, int quantity) {
@@ -14,7 +14,7 @@ public class MonsterConfig {
         this.hp = hp;
         this.speed = speed;
         this.armour = armour;
-        this.manaGainedOnKill = manaGainedOnKill;
+        MonsterConfig.manaGainedOnKill = manaGainedOnKill;
         this.quantity = quantity;
     }
 

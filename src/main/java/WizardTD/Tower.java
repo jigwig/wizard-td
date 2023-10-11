@@ -109,20 +109,65 @@ public class Tower {
     }
 
     public void draw() {
+        // Draw the tower image based on upgrade levels
         app.imageMode(app.CORNER);
-        app.image(app.towerImg, position.x - App.CELLSIZE / 2, position.y - App.CELLSIZE / 2);
-
+        if (rangeLevel >= 2 && speedLevel >= 2 && damageLevel >= 2) {
+            app.image(app.tower2Img, position.x - App.CELLSIZE / 2, position.y - App.CELLSIZE / 2);
+        } else if (rangeLevel >= 1 && speedLevel >= 1 && damageLevel >= 1) {
+            app.image(app.tower1Img, position.x - App.CELLSIZE / 2, position.y - App.CELLSIZE / 2);
+        } else {
+            app.image(app.towerImg, position.x - App.CELLSIZE / 2, position.y - App.CELLSIZE / 2);
+        }
+    
+        // Set a smaller text size for O and X
+        app.textSize(8);
+    
+        // Range upgrade level: Magenta "O"s at the top left
+        int displayRangeLevel = rangeLevel - ((rangeLevel >= 1 && speedLevel >= 1 && damageLevel >= 1) ? 1 : 0);
+        displayRangeLevel -= ((rangeLevel >= 2 && speedLevel >= 2 && damageLevel >= 2) ? 1 : 0);
+        app.fill(255, 0, 255);
+        for (int i = 0; i < displayRangeLevel; i++) {
+            app.text("O", position.x - 16 + (i * 8), position.y - 16);
+        }
+    
+        // Speed upgrade level: Blue square border in the center
+        int displaySpeedLevel = speedLevel - ((rangeLevel >= 1 && speedLevel >= 1 && damageLevel >= 1) ? 1 : 0);
+        displaySpeedLevel -= ((rangeLevel >= 2 && speedLevel >= 2 && damageLevel >= 2) ? 1 : 0);
+        if (displaySpeedLevel > 0) {
+            app.stroke(0, 0, 255);
+            app.strokeWeight(displaySpeedLevel);
+            app.noFill();
+            app.rect(position.x - 10, position.y - 10, 20, 20);
+        }
+        app.strokeWeight(2);  // Reset stroke weight to default
+    
+        // Damage upgrade level: Magenta "X"s at the bottom left
+        int displayDamageLevel = damageLevel - ((rangeLevel >= 1 && speedLevel >= 1 && damageLevel >= 1) ? 1 : 0);
+        displayDamageLevel -= ((rangeLevel >= 2 && speedLevel >= 2 && damageLevel >= 2) ? 1 : 0);
+        app.fill(255, 0, 255);
+        for (int i = 0; i < displayDamageLevel; i++) {
+            app.text("X", position.x - 16 + (i * 8), position.y + 16);
+        }
+    
+        // Reset text size to default (or any other value you usually use)
+        app.textSize(12);
+    
         // Highlight the tower's range when hovered over the tower
         if (isHovered(app.mouseX, app.mouseY)) {
             app.stroke(255, 255, 0);  // Yellow
             app.noFill();
             app.ellipse(position.x, position.y, range * 2, range * 2);
         }
-
+    
+        // Draw fireballs
         for (Fireball fireball : fireballs) {
             fireball.draw();
         }
     }
+    
+    
+    
+    
 
     public boolean isHovered(int mouseX, int mouseY) {
         float distance = PVector.dist(position, new PVector(mouseX, mouseY));

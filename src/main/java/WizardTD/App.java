@@ -46,13 +46,22 @@ public class App extends PApplet {
     public PImage pathImg2;
     public PImage pathImg3;
     public PImage towerImg;
+    public PImage tower1Img;
+    public PImage tower2Img;
     public PImage wizardHouseImg;
     public PImage gremlinImg;
     public PImage beetleImg;
     public PImage wormImg;
     public PImage fireballImg;
+    public PImage gremlinDeathImg1;
+    public PImage gremlinDeathImg2;
+    public PImage gremlinDeathImg3;
+    public PImage gremlinDeathImg4;
+    public PImage gremlinDeathImg5;
 
     public UserInterface userInterface;
+
+    public MonsterConfig monsterConfig;
 
     public ConfigReader configReader;
 
@@ -98,10 +107,18 @@ public class App extends PApplet {
         pathImg2 = loadImage("src/main/resources/WizardTD/path2.png");
         pathImg3 = loadImage("src/main/resources/WizardTD/path3.png");
         towerImg = loadImage("src/main/resources/WizardTD/tower0.png");
+        tower1Img = loadImage("src/main/resources/WizardTD/tower1.png");
+        tower2Img = loadImage("src/main/resources/WizardTD/tower2.png");
         wizardHouseImg = loadImage("src/main/resources/WizardTD/wizard_house.png");
         gremlinImg = loadImage("src/main/resources/WizardTD/gremlin.png");
         beetleImg = loadImage("src/main/resources/WizardTD/beetle.png");
+        wormImg = loadImage("src/main/resources/WizardTD/worm.png");
         fireballImg = loadImage("src/main/resources/WizardTD/fireball.png");
+        gremlinDeathImg1 = loadImage("src/main/resources/WizardTD/gremlin1.png");
+        gremlinDeathImg2 = loadImage("src/main/resources/WizardTD/gremlin2.png");
+        gremlinDeathImg3 = loadImage("src/main/resources/WizardTD/gremlin3.png");
+        gremlinDeathImg4 = loadImage("src/main/resources/WizardTD/gremlin4.png");
+        gremlinDeathImg5 = loadImage("src/main/resources/WizardTD/gremlin5.png");
 
         
         String layoutFileName = configReader.getLayout();
@@ -209,7 +226,7 @@ public class App extends PApplet {
         Iterator<Enemy> iterator = activeMonsters.iterator();
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
-            if (enemy.isDead()) {
+            if (enemy.isDead() && enemy.isDeathAnimationOver()) {
                 iterator.remove();
             }
         }

@@ -9,16 +9,32 @@ public class ManaSystem {
     private float currentMana;
     private float manaCap;
     private float manaGainedPerSecond;
+    private float manaPoolSpellCost;
+    private float manaPoolSpellCostIncreasePerUse;
+    private float manaPoolSpellCapMultiplier;
+    private float manaPoolSpellManaGainedMultiplier;
+    private float originalManaGainedPerSecond;
+    public static float originalManaGainedOnKill;  // Static variable for original mana gained on kill
+    public static float globalManaGainedOnKill;  // Static variable for global access
 
     public ManaSystem(App app, float initialMana, float initialManaCap, float initialManaGainedPerSecond) {
         this.app = app;
         this.currentMana = initialMana;
         this.manaCap = initialManaCap;
         this.manaGainedPerSecond = initialManaGainedPerSecond;
+        this.originalManaGainedPerSecond = initialManaGainedPerSecond;  // Store the original value
+        this.manaPoolSpellCost = app.configReader.getManaPoolSpellInitialCost();
+        this.manaPoolSpellCostIncreasePerUse = app.configReader.getManaPoolSpellCostIncreasePerUse();
+        this.manaPoolSpellCapMultiplier = app.configReader.getManaPoolSpellCapMultiplier();
+        this.manaPoolSpellManaGainedMultiplier = app.configReader.getManaPoolSpellManaGainedMultiplier();
+        originalManaGainedOnKill = MonsterConfig.manaGainedOnKill;  // Store the original value
+        globalManaGainedOnKill = originalManaGainedOnKill;  // Initialize global value
     }
 
     public void update(float FPS) {
         currentMana += manaGainedPerSecond / FPS;
+        System.out.println("managained: " + manaGainedPerSecond + "current mana: " + currentMana);
+
         currentMana = Math.min(currentMana, manaCap);
     }
 
@@ -34,16 +50,37 @@ public class ManaSystem {
         manaCap *= multiplier;
     }
 
-    public void increaseManaGained(float multiplier) {
-        manaGainedPerSecond *= multiplier;
+    public boolean castManaPoolSpell() {
+        if (currentMana >= manaPoolSpellCost) {
+            currentMana -= manaPoolSpellCost;
+            manaCap *= manaPoolSpellCapMultiplier;
+
+            // Add the increment to the mana gained per second
+            manaGainedPerSecond += (manaPoolSpellManaGainedMultiplier - 1) * originalManaGainedPerSecond;
+
+            // Add the increment to the global mana gained on kill
+            MonsterConfig.manaGainedOnKill += (manaPoolSpellManaGainedMultiplier - 1) * originalManaGainedOnKill;
+
+            // Increase the cost for the next spell
+            manaPoolSpellCost += manaPoolSpellCostIncreasePerUse;
+
+            return true;
+        }
+        return false;
     }
+    
 
     public float getCurrentMana() {
         return currentMana;
     }
+    
 
     public float getManaCap() {
         return manaCap;
+    }
+
+    public float getManaPoolSpellCost() {
+        return this.manaPoolSpellCost;
     }
 
     public void deductMana(float amount) {
@@ -97,6 +134,12 @@ public class ManaSystem {
     public void reset() {
         currentMana = app.configReader.getInitialMana();
         manaCap = app.configReader.getInitialManaCap();
+        manaGainedPerSecond = app.configReader.getInitialManaGainedPerSecond();
+        manaPoolSpellCost = app.configReader.getManaPoolSpellInitialCost();
+        manaPoolSpellCostIncreasePerUse = app.configReader.getManaPoolSpellCostIncreasePerUse();
+        manaPoolSpellCapMultiplier = app.configReader.getManaPoolSpellCapMultiplier();
+        manaPoolSpellManaGainedMultiplier = app.configReader.getManaPoolSpellManaGainedMultiplier();
+        
     }
 
 }

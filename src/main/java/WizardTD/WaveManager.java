@@ -1,7 +1,7 @@
 package WizardTD;
 
 import java.util.*;
-import processing.core.PVector;
+import processing.core.*;
 
 public class WaveManager {
     private App app;
@@ -14,6 +14,7 @@ public class WaveManager {
     private boolean isPreWavePause = true;
     private Pathfinder pathfinder;
     private float durationTimer = 0;
+    private MonsterConfig monsterConfig;
     
     
 
@@ -65,15 +66,34 @@ public class WaveManager {
 
 
     private void spawnMonster(MonsterConfig monsterConfig) {
-        List<PVector> path = pathfinder.getRandomPath();
-        if (path != null && !path.isEmpty()) {
-            PVector spawnPoint = path.get(0);
-            float spawnX = (spawnPoint.x + 0.5f) * App.CELLSIZE;
-            float spawnY = (spawnPoint.y + 0.5f) * App.CELLSIZE + Board.offsetY;
-            Enemy enemy = new Enemy(app, app.gremlinImg, monsterConfig.getType(), spawnX, spawnY, (int) monsterConfig.getHp(), monsterConfig.getSpeed(), (float) monsterConfig.getArmour(), (int) monsterConfig.getManaGainedOnKill(), path);
-            app.activeMonsters.add(enemy);
+    List<PVector> path = pathfinder.getRandomPath();
+    if (path != null && !path.isEmpty()) {
+        PVector spawnPoint = path.get(0);
+        float spawnX = (spawnPoint.x + 0.5f) * App.CELLSIZE;
+        float spawnY = (spawnPoint.y + 0.5f) * App.CELLSIZE + Board.offsetY;
+        PImage enemyImage;
+        switch (monsterConfig.getType()) {
+            case "gremlin":
+                enemyImage = app.gremlinImg;
+                break;
+            case "beetle":
+                enemyImage = app.beetleImg;
+                break;
+            case "worm":
+                enemyImage = app.wormImg;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid monster type: " + monsterConfig.getType());
         }
+
+        if (enemyImage == null) {
+            System.out.println("Enemy image is null for " + monsterConfig.getType());  // Debug line
+            return;  // Skip the rest of the method
+        }
+        Enemy enemy = new Enemy(app, enemyImage, monsterConfig.getType(), spawnX, spawnY, (int) monsterConfig.getHp(), monsterConfig.getSpeed(), (float) monsterConfig.getArmour(), (float) monsterConfig.getManaGainedOnKill(), path);
+        app.activeMonsters.add(enemy);
     }
+}
 
     public void draw() {
 

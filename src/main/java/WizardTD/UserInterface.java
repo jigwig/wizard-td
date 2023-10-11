@@ -44,6 +44,8 @@ public class UserInterface {
             button.draw();
         }
 
+        
+
 
     }
 
@@ -75,11 +77,15 @@ public class UserInterface {
                 }
             }
         }
+
+        Buttons manaPoolButton = getButtonByHotkey('m');
+        if (manaPoolButton != null && manaPoolButton.isActive()) {
+            boolean casted = app.manaSystem.castManaPoolSpell();
+            if (casted) {
+                manaPoolButton.isActive = false; // Deactivate button after spell is cast
+            }
+        }
     }
-    
-    
-    
-    
     
     
     private Buttons getButtonByHotkey(char hotkey) {
@@ -96,12 +102,18 @@ public class UserInterface {
     public List<String> getSelectedUpgrades() {
         return selectedUpgrades;
     }
-    
-    
 
     public void handleHotkey(char key) {
         for (Buttons button : elements) {
             button.onKey(key);
+        }
+    
+        // Special case for 'M' key
+        if (key == 'm' || key == 'M') {
+            Buttons manaPoolButton = getButtonByHotkey('m');
+            if (manaPoolButton != null) {
+                manaPoolButton.toggleActiveState();  // Call the new toggle method
+            }
         }
     }
 }
