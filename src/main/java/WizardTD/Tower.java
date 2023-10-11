@@ -44,7 +44,7 @@ public class Tower {
                 firingSpeed += 0.5;
                 speedLevel++;
             } else if ("damage".equals(upgradeType)) {
-                damage += damage / 2;
+                damage += app.configReader.getInitialTowerDamage() / 2;
                 damageLevel++;
             }
             // Deduct mana here

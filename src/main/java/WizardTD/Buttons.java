@@ -62,12 +62,6 @@ public class Buttons {
                 app.isFastForwarded = isActive;
             } else if ("P".equals(this.label)) {
                 app.isPaused = isActive;
-            } else if ("U1".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("range");
-            } else if ("U2".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("speed");
-            } else if ("U3".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("damage");
             }
         }
     }
@@ -84,17 +78,10 @@ public class Buttons {
         if (this.hotkey == Character.toLowerCase(key)) {
             isActive = !isActive;
 
-            // Implementing the features
             if ("FF".equals(this.label)) {
                 app.isFastForwarded = isActive;
             } else if ("P".equals(this.label)) {
                 app.isPaused = isActive;
-            } else if ("U1".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("range");
-            } else if ("U2".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("speed");
-            } else if ("U3".equals(this.label)) {
-                app.userInterface.getSelectedUpgrades().add("damage");
             }
         }
     }
