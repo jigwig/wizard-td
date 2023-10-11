@@ -9,9 +9,9 @@ public class Enemy {
     private PImage image;
     private PVector position;
     private float speed;
-    private int health;
-    private int armor;
-    private int maxHealth;
+    private float health;
+    private float armour;
+    private float maxHealth;
     private float manaGainedOnKill;
     private List<PVector> path;
     private int pathIndex;
@@ -19,14 +19,14 @@ public class Enemy {
     private int deathFrame;
     private int deathFrameCount;
 
-    public Enemy(App app, PImage image, String type, float spawnX, float spawnY, int health, float speed, int armor, float manaGainedOnKill, List<PVector> path) {
+    public Enemy(App app, PImage image, String type, float spawnX, float spawnY, float health, float speed, float armour, float manaGainedOnKill, List<PVector> path) {
         this.app = app;
         this.image = image;
         this.position = new PVector(spawnX, spawnY);
         this.speed = speed;
         this.health = health;
         this.maxHealth = health;
-        this.armor = armor;
+        this.armour = armour;
         this.manaGainedOnKill = manaGainedOnKill;
         this.path = path;
         this.pathIndex = 1;
@@ -66,9 +66,13 @@ public class Enemy {
     
     
 
-    public void takeDamage(int damage) {
-        this.health -= (damage * armor);
-        if(this.health <= 0) {
+    public void takeDamage(float damage) {
+        System.out.println("asd" + armour);
+        float actualDamage = (damage * armour); // Damage scaled by armour
+        this.health -= actualDamage; // Deduct the actual damage from health
+        System.out.println("Damage Taken: " + actualDamage + " New Health: " + this.health);  // Debug line
+    
+        if (this.health <= 0) {
             this.health = 0;
             die();
         }
@@ -77,6 +81,12 @@ public class Enemy {
     private void die() {
         // Handle enemy death logic here.
         // For example, award the player with some mana.
+        app.manaSystem.addMana(manaGainedOnKill);
+        isDead = true;
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 
     public void draw() {
@@ -100,5 +110,7 @@ public class Enemy {
     public PVector getPosition() {
         return position;
     }
+
+    
 
 }

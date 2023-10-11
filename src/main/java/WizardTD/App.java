@@ -48,8 +48,11 @@ public class App extends PApplet {
     public PImage towerImg;
     public PImage wizardHouseImg;
     public PImage gremlinImg;
+    public PImage beetleImg;
+    public PImage wormImg;
+    public PImage fireballImg;
 
-    private UserInterface userInterface;
+    public UserInterface userInterface;
 
     public ConfigReader configReader;
 
@@ -97,6 +100,8 @@ public class App extends PApplet {
         towerImg = loadImage("src/main/resources/WizardTD/tower0.png");
         wizardHouseImg = loadImage("src/main/resources/WizardTD/wizard_house.png");
         gremlinImg = loadImage("src/main/resources/WizardTD/gremlin.png");
+        beetleImg = loadImage("src/main/resources/WizardTD/beetle.png");
+        fireballImg = loadImage("src/main/resources/WizardTD/fireball.png");
 
         
         String layoutFileName = configReader.getLayout();
@@ -178,6 +183,7 @@ public class App extends PApplet {
         waveManager.draw();
 
         manaSystem.draw(WIDTH, TOPBAR);
+
         } else {
             textSize(50);
             fill(255, 0, 0);  // Set the text color to red
@@ -200,7 +206,19 @@ public class App extends PApplet {
             enemy.draw();
         }
 
+        Iterator<Enemy> iterator = activeMonsters.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            if (enemy.isDead()) {
+                iterator.remove();
+            }
+        }
+
         manaSystem.update(FPS);
+
+        for (Tower tower : board.towers) {
+            tower.update();  // Update each tower's state
+        }
 
     }
 
@@ -252,7 +270,4 @@ public class App extends PApplet {
 
         return result;
     }
-
-    //asdasdasdasdas
-
 }

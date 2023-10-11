@@ -10,12 +10,9 @@ public class Board {
     private char[][] boardLayout;
     private int wizardX;
     private int wizardY;
-    private List<Tower> towers = new ArrayList<>();
+    public List<Tower> towers = new ArrayList<>();
 
     public static final int offsetY = App.HEIGHT - (App.BOARD_WIDTH * App.CELLSIZE); // Calculate offset to move board down 
-
-    
-
 
     public Board(App app, String layoutFileName) {
         this.app = app;
@@ -59,26 +56,38 @@ public class Board {
         return boardLayout;
     }
 
-    public void placeTower(int x, int y, PImage image) {
+    public Tower getSelectedTower(int mouseX, int mouseY) {
+        for (Tower tower : towers) {
+            if (tower.isHovered(mouseX, mouseY)) {
+                return tower;
+            }
+        }
+        return null;
+    }
+
+    public boolean placeTower(int x, int y, List<String> selectedUpgrades) {
         int cellX = (int) Math.floor((float) x / App.CELLSIZE);
         int cellY = (int) Math.floor((float) (y - offsetY) / App.CELLSIZE);
-        
+    
         if (cellX >= 0 && cellX < App.BOARD_WIDTH && cellY >= 0 && cellY < App.BOARD_WIDTH) {
-            if (boardLayout[cellY][cellX] == ' ') {
-                // Calculate the center of the cell for tower placement
+            char currentTile = boardLayout[cellY][cellX];
+            if (currentTile == ' ') {
                 int centerX = (cellX * App.CELLSIZE) + (App.CELLSIZE / 2);
                 int centerY = (cellY * App.CELLSIZE) + (App.CELLSIZE / 2) + offsetY;
                 
-                towers.add(new Tower(app, centerX, centerY, image));
-                
-                // Mark the board layout to indicate that a tower has been placed.
-                boardLayout[cellY][cellX] = 'T'; 
+                Tower newTower = new Tower(app, centerX, centerY);
+                towers.add(newTower);
+                boardLayout[cellY][cellX] = 'T';
+                newTower.applyUpgrades(selectedUpgrades, (int)app.manaSystem.getCurrentMana());
+                return true;
             }
         }
+        return false;
     }
     
     
-
+    
+    
     public void draw() {
         for (int i = 0; i < App.BOARD_WIDTH; i++) {
             for (int j = 0; j < App.BOARD_WIDTH; j++) {
@@ -94,7 +103,17 @@ public class Board {
         tiles[wizardX][wizardY].draw(offsetY);
     }
     
+
+    public void resetLayout() {
+        for (int i = 0; i < App.BOARD_WIDTH; i++) {
+            for (int j = 0; j < App.BOARD_WIDTH; j++) {
+                boardLayout[i][j] = ' '; // Reset to empty
+            }
+        }
+    }
+
     public void reset() {
         towers.clear();
+        resetLayout();
     }
 }

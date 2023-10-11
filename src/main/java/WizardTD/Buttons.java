@@ -11,7 +11,7 @@ public class Buttons {
     private char hotkey;
     private int cost;
     private boolean isHovered = false;
-    private boolean isActive = false;
+    public boolean isActive = false;
 
     public Buttons(App app, int x, int y, String label, String description, char hotkey, int cost) {
         this.app = app;
@@ -60,21 +60,23 @@ public class Buttons {
             // Implementing the features
             if ("FF".equals(this.label)) {
                 app.isFastForwarded = isActive;
-            }
-            else if ("P".equals(this.label)) {
+            } else if ("P".equals(this.label)) {
                 app.isPaused = isActive;
+            } else if ("U1".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("range");
+            } else if ("U2".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("speed");
+            } else if ("U3".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("damage");
             }
         }
     }
-    
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return isActive;
     }
 
-    public boolean matchesHotkey(char key)
-    {
+    public boolean matchesHotkey(char key) {
         return key == hotkey;
     }
 
@@ -84,14 +86,16 @@ public class Buttons {
 
             // Implementing the features
             if ("FF".equals(this.label)) {
-                app.isFastForwarded = isActive; 
-
-            }
-            else if ("P".equals(this.label)) {
-                app.isPaused = isActive; 
-
+                app.isFastForwarded = isActive;
+            } else if ("P".equals(this.label)) {
+                app.isPaused = isActive;
+            } else if ("U1".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("range");
+            } else if ("U2".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("speed");
+            } else if ("U3".equals(this.label)) {
+                app.userInterface.getSelectedUpgrades().add("damage");
             }
         }
     }
 }
-    

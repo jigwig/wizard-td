@@ -8,6 +8,8 @@ public class UserInterface {
 
     private App app;
     private List<Buttons> elements;
+    private List<String> selectedUpgrades = new ArrayList<>();
+
 
     public UserInterface(App app) {
         this.app = app;
@@ -48,15 +50,53 @@ public class UserInterface {
     public void onClick(int mouseX, int mouseY) {
         for (Buttons button : elements) {
             button.onClick(mouseX, mouseY);
-            if (button.matchesHotkey('t') && button.isActive()) {
-                // Check if the user has enough mana to place a tower
-                if (app.manaSystem.spendMana(app.configReader.getTowerCost())) {
-                    // Place the tower
-                    app.board.placeTower(mouseX, mouseY, app.towerImg);
-                } 
+        }
+    
+        // Clear selected upgrades
+        selectedUpgrades.clear();
+    
+        // Check for upgrade-related actions
+        if (getButtonByHotkey('1') != null && getButtonByHotkey('1').isActive()) selectedUpgrades.add("range");
+        if (getButtonByHotkey('2') != null && getButtonByHotkey('2').isActive()) selectedUpgrades.add("speed");
+        if (getButtonByHotkey('3') != null && getButtonByHotkey('3').isActive()) selectedUpgrades.add("damage");
+    
+        // Check for tower-related actions
+        Tower selectedTower = app.board.getSelectedTower(mouseX, mouseY);
+        if (selectedTower != null) {
+            selectedTower.applyUpgrades(selectedUpgrades, (int)app.manaSystem.getCurrentMana());
+        }
+    
+        Buttons towerButton = getButtonByHotkey('t');
+        if (towerButton != null && towerButton.isActive()) {
+            if (app.configReader.getTowerCost() <= app.manaSystem.getCurrentMana()) {
+                boolean placed = app.board.placeTower(mouseX, mouseY, selectedUpgrades);
+                if (placed) {
+                    app.manaSystem.spendMana(app.configReader.getTowerCost());
+                }
             }
         }
     }
+    
+    
+    
+    
+    
+    
+    private Buttons getButtonByHotkey(char hotkey) {
+        for (Buttons button : elements) {
+            if (button.matchesHotkey(hotkey)) {
+                return button;
+            }
+        }
+        return null;
+    }
+    
+    
+    
+    public List<String> getSelectedUpgrades() {
+        return selectedUpgrades;
+    }
+    
     
 
     public void handleHotkey(char key) {

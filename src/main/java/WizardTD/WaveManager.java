@@ -70,7 +70,7 @@ public class WaveManager {
             PVector spawnPoint = path.get(0);
             float spawnX = (spawnPoint.x + 0.5f) * App.CELLSIZE;
             float spawnY = (spawnPoint.y + 0.5f) * App.CELLSIZE + Board.offsetY;
-            Enemy enemy = new Enemy(app, app.gremlinImg, monsterConfig.getType(), spawnX, spawnY, (int) monsterConfig.getHp(), monsterConfig.getSpeed(), (int) monsterConfig.getArmour(), (int) monsterConfig.getManaGainedOnKill(), path);
+            Enemy enemy = new Enemy(app, app.gremlinImg, monsterConfig.getType(), spawnX, spawnY, (int) monsterConfig.getHp(), monsterConfig.getSpeed(), (float) monsterConfig.getArmour(), (int) monsterConfig.getManaGainedOnKill(), path);
             app.activeMonsters.add(enemy);
         }
     }
@@ -115,5 +115,9 @@ public class WaveManager {
         preWavePauseTimer = 0;
         isPreWavePause = true;
         durationTimer = 0;
+        app.activeMonsters.clear();
+        loadMonstersForCurrentWave();
+
+
     }
 }

@@ -53,6 +53,13 @@ public class ManaSystem {
         }
     }
 
+    public void addMana(float amount) {
+        currentMana += amount;
+        if (currentMana > manaCap) {
+            currentMana = manaCap;
+        }
+    }
+
     public void draw(int width, int topBarHeight) {
         float manaBarHeight = topBarHeight * 0.5f; 
         float verticalOffset = (topBarHeight - manaBarHeight) / 2;
