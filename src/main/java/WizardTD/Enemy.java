@@ -1,6 +1,9 @@
 package WizardTD;
 
 import java.util.*;
+
+import javax.naming.ldap.ManageReferralControl;
+
 import processing.core.*;
 
 public class Enemy {
@@ -93,8 +96,10 @@ public class Enemy {
 
     public void die() {
         deathPosition = position.copy();
-        app.manaSystem.addMana(MonsterConfig.manaGainedOnKill);  // Use the global variable here
-        System.out.println(MonsterConfig.manaGainedOnKill);
+        float actualManaGainedOnKill = manaGainedOnKill * app.manaSystem.getManaGainedMultiplier();
+        System.out.println(manaGainedOnKill);
+        app.manaSystem.addMana(actualManaGainedOnKill);
+        System.out.println("asd" + actualManaGainedOnKill);
         isDead = true;
     }
 

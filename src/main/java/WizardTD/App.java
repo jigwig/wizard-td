@@ -243,7 +243,9 @@ public class App extends PApplet {
         board.reset();
         waveManager.reset();
         manaSystem.reset();
+        userInterface.resetButtons();  
         isGameLost = false;
+        isFastForwarded = false;
     }
 
     public static void main(String[] args) {

@@ -14,8 +14,11 @@ public class ManaSystem {
     private float manaPoolSpellCapMultiplier;
     private float manaPoolSpellManaGainedMultiplier;
     private float originalManaGainedPerSecond;
-    public static float originalManaGainedOnKill;  // Static variable for original mana gained on kill
+
+    private float castCount = 0;
+
     public static float globalManaGainedOnKill;  // Static variable for global access
+    private float manaPoolSpellManaGainedMultiplierCumulative = 1.0f;  // Initialize to 1.0f
 
     public ManaSystem(App app, float initialMana, float initialManaCap, float initialManaGainedPerSecond) {
         this.app = app;
@@ -27,13 +30,11 @@ public class ManaSystem {
         this.manaPoolSpellCostIncreasePerUse = app.configReader.getManaPoolSpellCostIncreasePerUse();
         this.manaPoolSpellCapMultiplier = app.configReader.getManaPoolSpellCapMultiplier();
         this.manaPoolSpellManaGainedMultiplier = app.configReader.getManaPoolSpellManaGainedMultiplier();
-        originalManaGainedOnKill = MonsterConfig.manaGainedOnKill;  // Store the original value
-        globalManaGainedOnKill = originalManaGainedOnKill;  // Initialize global value
     }
 
     public void update(float FPS) {
         currentMana += manaGainedPerSecond / FPS;
-        System.out.println("managained: " + manaGainedPerSecond + "current mana: " + currentMana);
+        // System.out.println("managained: " + manaGainedPerSecond + "current mana: " + currentMana);
 
         currentMana = Math.min(currentMana, manaCap);
     }
@@ -52,26 +53,30 @@ public class ManaSystem {
 
     public boolean castManaPoolSpell() {
         if (currentMana >= manaPoolSpellCost) {
+            castCount++;
+
             currentMana -= manaPoolSpellCost;
             manaCap *= manaPoolSpellCapMultiplier;
 
-            // Add the increment to the mana gained per second
-            manaGainedPerSecond += (manaPoolSpellManaGainedMultiplier - 1) * originalManaGainedPerSecond;
+            // Update the cumulative multiplier
+            manaPoolSpellManaGainedMultiplierCumulative = 1 + (manaPoolSpellManaGainedMultiplier - 1) * castCount;
 
-            // Add the increment to the global mana gained on kill
-            MonsterConfig.manaGainedOnKill += (manaPoolSpellManaGainedMultiplier - 1) * originalManaGainedOnKill;
+            // Update mana gained per second
+            manaGainedPerSecond = originalManaGainedPerSecond * manaPoolSpellManaGainedMultiplierCumulative;
 
             // Increase the cost for the next spell
             manaPoolSpellCost += manaPoolSpellCostIncreasePerUse;
-
             return true;
         }
         return false;
     }
-    
 
     public float getCurrentMana() {
         return currentMana;
+    }
+
+    public float getManaGainedMultiplier() {
+        return manaPoolSpellManaGainedMultiplierCumulative;
     }
     
 

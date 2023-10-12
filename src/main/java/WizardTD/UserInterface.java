@@ -116,4 +116,10 @@ public class UserInterface {
             }
         }
     }
+
+    public void resetButtons() {
+        for (Buttons button : elements) {
+            button.isActive = false;
+        }
+    }
 }

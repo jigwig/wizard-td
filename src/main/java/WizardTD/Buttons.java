@@ -49,8 +49,26 @@ public class Buttons {
             if ("M".equals(this.label)) {
                 displayCost = app.manaSystem.getManaPoolSpellCost(); // Assuming you have this getter in ManaSystem
             }
-            app.text("cost: " + displayCost, x + width + 5, y + height / 2 + 10); // Display cost below button
+            app.text("cost: " + (int) displayCost, x + width + 5, y + height / 2 + 10); // Display cost below button
         }
+
+        if (isHovered && ("T".equals(label) || "M".equals(label))) {
+            // Display tooltip for cost
+            app.fill(255);  // 
+            app.rect(x - 100, y, 90, 20);
+            app.fill(0);  // White text
+            app.text("Cost: " + cost, x - 95, y + 15);
+        }
+
+        if (isHovered && "M".equals(label)) {
+            // Display tooltip for cost
+            app.fill(255);  // 
+            app.rect(x - 100, y, 90, 20);
+            app.fill(0);  // White text
+            app.text("Cost: " + (int) app.manaSystem.getManaPoolSpellCost(), x - 95, y + 15);
+        }
+
+
     }
     
     
