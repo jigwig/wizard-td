@@ -26,28 +26,42 @@ public class UserInterface {
     }
 
     public void draw(int mouseX, int mouseY) {
-
+        // Fill the sidebar with a background color
         app.noStroke();
         app.fill(132, 115, 74, 255);  // Fill with the background color
         app.rect(App.WIDTH - App.SIDEBAR, 0, App.SIDEBAR, App.HEIGHT);  // Rectangle on the right
-
+    
         // Drawing a rectangle on top
         app.rect(0, 0, App.WIDTH, App.TOPBAR);  // Rectangle on the top
-
+    
         app.stroke(0);
-
+    
+        // Update and draw each button
         for (Buttons button : elements) {
             button.update(mouseX, mouseY);
         }
-
+    
         for (Buttons button : elements) {
             button.draw();
         }
-
-        
-
-
+    
+        // Check if hovering over a tower
+        Tower selectedTower = app.board.getSelectedTower(mouseX, mouseY);
+        if (selectedTower != null) {
+            // Check which upgrade buttons are active
+            List<String> activeUpgrades = new ArrayList<>();
+            if (getButtonByHotkey('1').isActive()) activeUpgrades.add("range");
+            if (getButtonByHotkey('2').isActive()) activeUpgrades.add("speed");
+            if (getButtonByHotkey('3').isActive()) activeUpgrades.add("damage");
+    
+            // If any upgrade buttons are active, draw the upgrade cost summary
+            if (!activeUpgrades.isEmpty()) {
+                drawUpgradeCostSummary(activeUpgrades, selectedTower);
+            }
+        }
     }
+    
+    
 
     public void onClick(int mouseX, int mouseY) {
         for (Buttons button : elements) {
@@ -87,7 +101,6 @@ public class UserInterface {
         }
     }
     
-    
     private Buttons getButtonByHotkey(char hotkey) {
         for (Buttons button : elements) {
             if (button.matchesHotkey(hotkey)) {
@@ -95,6 +108,52 @@ public class UserInterface {
             }
         }
         return null;
+    }
+    
+    public void drawUpgradeCostSummary(List<String> selectedUpgrades, Tower selectedTower) {
+        int sidebarX = App.WIDTH - App.SIDEBAR + 12;  // Move a bit to the left to make the box wider
+        int rectWidth = App.SIDEBAR - 36;  // Slightly wider
+        
+        // Calculate the dynamic height of the middle box based on the number of selected upgrades
+        int middleBoxHeight = 18 * selectedUpgrades.size();
+        
+        // Calculate the Y-coordinate for the bottom of the middle box
+        int middleBoxBottomY = App.HEIGHT - 60 - middleBoxHeight;  // Slightly lower
+        
+        // Draw the top box
+        app.stroke(0);
+        app.fill(255);
+        app.rect(sidebarX, middleBoxBottomY - 24, rectWidth, 24);  // Slightly shorter
+        app.fill(0);
+        app.text("Upgrade Cost", sidebarX + 6, middleBoxBottomY - 8);
+        
+        // Draw the middle box
+        app.stroke(0);
+        app.fill(255);
+        app.rect(sidebarX, middleBoxBottomY, rectWidth, middleBoxHeight);
+        
+        // Populate the middle box with the costs of each upgrade
+        app.fill(0);
+        int yOffset = 18;
+        for (String upgrade : selectedUpgrades) {
+            int cost = selectedTower.getNextUpgradeCost(upgrade);
+            float costWidth = app.textWidth(String.valueOf(cost));
+            
+            app.text(upgrade + ":", sidebarX + 6, middleBoxBottomY + yOffset - 6);  // Closer to the border
+            app.text(cost, sidebarX + rectWidth - costWidth - 6, middleBoxBottomY + yOffset - 6);  // Dynamic alignment
+            yOffset += 18;
+        }
+        
+        // Draw the bottom box
+        int totalCost = selectedUpgrades.stream().mapToInt(selectedTower::getNextUpgradeCost).sum();
+        float totalCostWidth = app.textWidth(String.valueOf(totalCost));
+        
+        app.stroke(0);
+        app.fill(255);
+        app.rect(sidebarX, middleBoxBottomY + middleBoxHeight, rectWidth, 22);  // Slightly shorter
+        app.fill(0);
+        app.text("Total:", sidebarX + 6, middleBoxBottomY + middleBoxHeight + 14);
+        app.text(totalCost, sidebarX + rectWidth - totalCostWidth - 6, middleBoxBottomY + middleBoxHeight + 14);  // Dynamic alignment
     }
     
     

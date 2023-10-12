@@ -200,6 +200,7 @@ public class App extends PApplet {
         waveManager.draw();
 
         manaSystem.draw(WIDTH, TOPBAR);
+        
 
         } else {
             textSize(50);

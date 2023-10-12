@@ -120,7 +120,7 @@ public class Tower {
         }
     
         // Set a smaller text size for O and X
-        app.textSize(8);
+        app.textSize(10);
     
         // Range upgrade level: Magenta "O"s at the top left
         int displayRangeLevel = rangeLevel - ((rangeLevel >= 1 && speedLevel >= 1 && damageLevel >= 1) ? 1 : 0);
@@ -157,6 +157,7 @@ public class Tower {
             app.stroke(255, 255, 0);  // Yellow
             app.noFill();
             app.ellipse(position.x, position.y, range * 2, range * 2);
+            
         }
     
         // Draw fireballs

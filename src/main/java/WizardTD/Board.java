@@ -87,7 +87,6 @@ public class Board {
     
     
     
-    
     public void draw() {
         for (int i = 0; i < App.BOARD_WIDTH; i++) {
             for (int j = 0; j < App.BOARD_WIDTH; j++) {
