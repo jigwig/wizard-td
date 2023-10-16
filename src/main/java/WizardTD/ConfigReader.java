@@ -7,6 +7,7 @@ import processing.data.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ConfigReader {
     private PApplet app;
     private JSONObject configData;

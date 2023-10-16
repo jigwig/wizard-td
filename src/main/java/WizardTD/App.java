@@ -2,15 +2,12 @@ package WizardTD;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.data.JSONArray;
-import processing.data.JSONObject;
 import processing.event.MouseEvent;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import java.io.*;
 import java.util.*;
 
 public class App extends PApplet {
@@ -48,6 +45,7 @@ public class App extends PApplet {
     public PImage towerImg;
     public PImage tower1Img;
     public PImage tower2Img;
+    public PImage freezeTowerImg;
     public PImage wizardHouseImg;
     public PImage gremlinImg;
     public PImage beetleImg;
@@ -58,6 +56,7 @@ public class App extends PApplet {
     public PImage gremlinDeathImg3;
     public PImage gremlinDeathImg4;
     public PImage gremlinDeathImg5;
+    
 
     public UserInterface userInterface;
 
@@ -109,6 +108,7 @@ public class App extends PApplet {
         towerImg = loadImage("src/main/resources/WizardTD/tower0.png");
         tower1Img = loadImage("src/main/resources/WizardTD/tower1.png");
         tower2Img = loadImage("src/main/resources/WizardTD/tower2.png");
+        freezeTowerImg = loadImage("src/main/resources/WizardTD/freezeTower (2).png");
         wizardHouseImg = loadImage("src/main/resources/WizardTD/wizard_house.png");
         gremlinImg = loadImage("src/main/resources/WizardTD/gremlin.png");
         beetleImg = loadImage("src/main/resources/WizardTD/beetle.png");
@@ -237,6 +237,7 @@ public class App extends PApplet {
         for (Tower tower : board.towers) {
             tower.update();  // Update each tower's state
         }
+
 
     }
 

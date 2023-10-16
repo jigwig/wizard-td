@@ -1,10 +1,8 @@
 package WizardTD;
 
 import java.util.*;
-
-import javax.naming.ldap.ManageReferralControl;
-
 import processing.core.*;
+
 
 public class Enemy {
     private App app;
@@ -21,6 +19,8 @@ public class Enemy {
     private List<PImage> deathAnimationFrames;
     private int deathAnimationFrameCounter = 0;
     private PVector deathPosition;
+    private float freezeTimer = 0;
+
     
 
     public Enemy(App app, PImage image, String type, float spawnX, float spawnY, float health, float speed, float armour, float manaGainedOnKill, List<PVector> path) {
@@ -43,14 +43,15 @@ public class Enemy {
             this.deathAnimationFrames.add(app.gremlinDeathImg4);
             this.deathAnimationFrames.add(app.gremlinDeathImg5);
         }
-
-
-
-        
-        
+            
     }
 
     public void move() {
+        updateFreeze();
+        if (freezeTimer > 0) {
+            return;
+        }
+
         if (pathIndex < path.size()) {
             PVector target = path.get(pathIndex);
             float targetX = (target.x + 0.5f) * App.CELLSIZE;
@@ -94,12 +95,28 @@ public class Enemy {
         }
     }
 
+    public void freeze(float duration) {
+        if (freezeTimer <= 0) {  // Only reset the timer if it's not already running
+            freezeTimer = duration;
+        }
+    }
+    
+
+    public void updateFreeze() {
+        if (freezeTimer > 0) {
+            System.out.println("Updating freeze timer: " + freezeTimer); // Debug line
+            freezeTimer -= 1f / App.FPS;
+        }
+        if (freezeTimer < 0) { // New condition to reset freezeTimer
+            System.out.println("Resetting freeze timer"); // Debug line
+            freezeTimer = 0;
+        }
+    }
+
     public void die() {
         deathPosition = position.copy();
         float actualManaGainedOnKill = manaGainedOnKill * app.manaSystem.getManaGainedMultiplier();
-        System.out.println(manaGainedOnKill);
         app.manaSystem.addMana(actualManaGainedOnKill);
-        System.out.println("asd" + actualManaGainedOnKill);
         isDead = true;
     }
 

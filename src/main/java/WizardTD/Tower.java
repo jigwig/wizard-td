@@ -4,17 +4,17 @@ import processing.core.*;
 import java.util.*;
 
 public class Tower {
-    private App app;
-    private PVector position;
-    private float range;
-    private float firingSpeed;
-    private float damage;
-    private List<Fireball> fireballs;
-    private float timeSinceLastFire;
-    private int cost;
-    private int rangeLevel;
-    private int speedLevel;
-    private int damageLevel;
+    protected App app;
+    protected PVector position;
+    protected float range;
+    protected float firingSpeed;
+    protected float damage;
+    protected List<Fireball> fireballs;
+    protected float timeSinceLastFire;
+    protected int cost;
+    protected int rangeLevel;
+    protected int speedLevel;
+    protected int damageLevel;
 
     public Tower(App app, float x, float y) {
         this.app = app;
@@ -97,7 +97,7 @@ public class Tower {
         }
     }
 
-    private boolean isInRange(Enemy enemy) {
+    protected boolean isInRange(Enemy enemy) {
         float distance = PVector.dist(position, enemy.getPosition());
         return distance <= range;
     }
@@ -157,7 +157,6 @@ public class Tower {
             app.stroke(255, 255, 0);  // Yellow
             app.noFill();
             app.ellipse(position.x, position.y, range * 2, range * 2);
-            
         }
     
         // Draw fireballs

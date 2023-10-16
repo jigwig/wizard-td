@@ -2,6 +2,7 @@ package WizardTD;
 
 import processing.core.PVector;
 
+
 public class Fireball {
     private App app;
     private PVector position;

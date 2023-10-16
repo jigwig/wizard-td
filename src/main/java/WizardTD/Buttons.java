@@ -1,7 +1,5 @@
 package WizardTD;
 
-import processing.core.PApplet;
-
 public class Buttons {
 
     private App app;

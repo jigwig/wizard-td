@@ -1,8 +1,6 @@
 package WizardTD;
 
-import processing.core.PApplet;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UserInterface {
 
@@ -23,6 +21,8 @@ public class UserInterface {
         elements.add(new Buttons(app, 648, 250, "U2", "Upgrade speed", '2', 20));
         elements.add(new Buttons(app, 648, 300, "U3", "Upgrade damage", '3', 20));
         elements.add(new Buttons(app, 648, 350, "M", "Mana Pool", 'm', 0));
+        elements.add(new Buttons(app, 648, 400, "Z", "Build Freeze Tower", 'z', 120));
+
     }
 
     public void draw(int mouseX, int mouseY) {
@@ -85,7 +85,7 @@ public class UserInterface {
         Buttons towerButton = getButtonByHotkey('t');
         if (towerButton != null && towerButton.isActive()) {
             if (app.configReader.getTowerCost() <= app.manaSystem.getCurrentMana()) {
-                boolean placed = app.board.placeTower(mouseX, mouseY, selectedUpgrades);
+                boolean placed = app.board.placeTower(mouseX, mouseY, selectedUpgrades, false);
                 if (placed) {
                     app.manaSystem.spendMana(app.configReader.getTowerCost());
                 }
@@ -97,6 +97,16 @@ public class UserInterface {
             boolean casted = app.manaSystem.castManaPoolSpell();
             if (casted) {
                 manaPoolButton.isActive = false; // Deactivate button after spell is cast
+            }
+        }
+
+        Buttons freezeTowerButton = getButtonByHotkey('z');
+        if (freezeTowerButton != null && freezeTowerButton.isActive()) {
+            if (120 <= app.manaSystem.getCurrentMana()) {  // Assume the freeze tower costs 120 mana
+                boolean placed = app.board.placeTower(mouseX, mouseY, selectedUpgrades, true);
+                if (placed) {
+                    app.manaSystem.spendMana(120);
+                }
             }
         }
     }

@@ -1,9 +1,5 @@
 package WizardTD;
 
-import java.util.*;
-import processing.core.*;
-
-
 public class ManaSystem {
     private App app;
     private float currentMana;

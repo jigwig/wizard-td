@@ -1,6 +1,5 @@
 package WizardTD;
 
-import processing.core.*;
 import java.io.*;
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class Board {
         return null;
     }
 
-    public boolean placeTower(int x, int y, List<String> selectedUpgrades) {
+    public boolean placeTower(int x, int y, List<String> selectedUpgrades, boolean isFreezeTower) {
         int cellX = (int) Math.floor((float) x / App.CELLSIZE);
         int cellY = (int) Math.floor((float) (y - offsetY) / App.CELLSIZE);
     
@@ -75,7 +74,7 @@ public class Board {
                 int centerX = (cellX * App.CELLSIZE) + (App.CELLSIZE / 2);
                 int centerY = (cellY * App.CELLSIZE) + (App.CELLSIZE / 2) + offsetY;
                 
-                Tower newTower = new Tower(app, centerX, centerY);
+                Tower newTower = isFreezeTower ? new FreezeTower(app, centerX, centerY) : new Tower(app, centerX, centerY);
                 towers.add(newTower);
                 boardLayout[cellY][cellX] = 'T';
                 newTower.applyUpgrades(selectedUpgrades, (int)app.manaSystem.getCurrentMana());

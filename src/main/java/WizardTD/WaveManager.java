@@ -13,10 +13,8 @@ public class WaveManager {
     private float preWavePauseTimer = 0;
     private boolean isPreWavePause = true;
     private Pathfinder pathfinder;
-    private float durationTimer = 0;
-    private MonsterConfig monsterConfig;
-    
-    
+    private float durationTimer = 0;    
+
 
     public WaveManager(App app, List<WaveConfig> waves) {
         this.app = app;
