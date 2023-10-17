@@ -1,7 +1,6 @@
 package WizardTD;
 
-import processing.core.*;
-import java.util.*;
+import java.lang.Math;
 
 public class FreezeTower extends Tower {
     private float freezeDuration;
@@ -42,15 +41,38 @@ public class FreezeTower extends Tower {
     public void draw() {
         app.imageMode(app.CORNER);
         app.image(app.freezeTowerImg, position.x - App.CELLSIZE / 2, position.y - App.CELLSIZE / 2);
-
+    
         // Draw the charging circle
-        float radius = 20; // Radius of the charging circle
-        float percentage = timeSinceLastFreeze / FREEZE_INTERVAL; // Calculate the percentage
-        float angle = 360 * percentage; // Convert the percentage to an angle in degrees
-        app.stroke(0, 255, 0); // Green outline
-        app.fill(0, 255, 0, 128); // Green, semi-transparent fill
-        app.arc(position.x, position.y, radius, radius, app.radians(-90), app.radians(-90 + angle)); // Draw the arc
+        float radius = 20;
+        float percentage = timeSinceLastFreeze / FREEZE_INTERVAL;
+        float angle = 360 * percentage;
+        app.stroke(0, 255, 0);
+        app.fill(0, 255, 0, 128);
+        app.arc(position.x, position.y, radius, radius, (float) Math.toRadians(-90), (float) Math.toRadians(-90 + angle));
+    
+        // Draw the shockwave
+        if (timeSinceLastFreeze < 0.5) {  // Only show the shockwave for 0.5 second after the freeze
+            float shockwaveScale = timeSinceLastFreeze / 0.5f;  // Scale based on time elapsed since last freeze
+            float shockwaveRadius = shockwaveScale * range;  // Scale the radius
+            
+            // First, more transparent shockwave
+            app.stroke(65, 220, 245, 50);
+            app.noFill();
+            app.ellipse(position.x, position.y, shockwaveRadius * 2, shockwaveRadius * 2);
+            
+            // Second, slightly less transparent and smaller shockwave
+            app.stroke(65, 220, 245, 100);
+            app.noFill();
+            app.ellipse(position.x, position.y, (shockwaveRadius - 10) * 2, (shockwaveRadius - 10) * 2);
+        }
+    
+        // Draw the tower's range when hovered
+        if (isHovered(app.mouseX, app.mouseY)) {
+            app.stroke(65, 220, 245);
+            app.noFill();
+            app.ellipse(position.x, position.y, range * 2, range * 2);
+        }
     }
-
+    
     
 }

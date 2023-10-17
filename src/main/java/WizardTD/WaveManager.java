@@ -90,8 +90,14 @@ public class WaveManager {
         }
         Enemy enemy = new Enemy(app, enemyImage, monsterConfig.getType(), spawnX, spawnY, (int) monsterConfig.getHp(), monsterConfig.getSpeed(), (float) monsterConfig.getArmour(), (float) monsterConfig.getManaGainedOnKill(), path);
         app.activeMonsters.add(enemy);
+        }
     }
-}
+
+    public boolean allWavesCompleted() {
+        return currentWaveIndex >= waves.size() - 1 && monstersToSpawn.isEmpty() && !isPreWavePause;
+    }
+
+
 
     public void draw() {
 

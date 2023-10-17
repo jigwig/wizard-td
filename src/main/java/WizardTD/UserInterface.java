@@ -17,7 +17,7 @@ public class UserInterface {
         elements.add(new Buttons(app, 648, 50, "FF", "2x Speed", 'f', 0));
         elements.add(new Buttons(app, 648, 100, "P", "PAUSE", 'p', 0));
         elements.add(new Buttons(app, 648, 150, "T", "Build Tower", 't', 100));
-        elements.add(new Buttons(app, 648, 200, "U1", "Upgrade range", '1', 20)); // Upgrade costs may vary
+        elements.add(new Buttons(app, 648, 200, "U1", "Upgrade range", '1', 20)); 
         elements.add(new Buttons(app, 648, 250, "U2", "Upgrade speed", '2', 20));
         elements.add(new Buttons(app, 648, 300, "U3", "Upgrade damage", '3', 20));
         elements.add(new Buttons(app, 648, 350, "M", "Mana Pool", 'm', 0));
@@ -55,7 +55,7 @@ public class UserInterface {
             if (getButtonByHotkey('3').isActive()) activeUpgrades.add("damage");
     
             // If any upgrade buttons are active, draw the upgrade cost summary
-            if (!activeUpgrades.isEmpty()) {
+            if (!activeUpgrades.isEmpty() && (!(selectedTower instanceof FreezeTower))) {
                 drawUpgradeCostSummary(activeUpgrades, selectedTower);
             }
         }

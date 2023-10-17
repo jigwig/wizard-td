@@ -20,8 +20,8 @@ public class Enemy {
     private int deathAnimationFrameCounter = 0;
     private PVector deathPosition;
     private float freezeTimer = 0;
+    private PImage frozenImage;
 
-    
 
     public Enemy(App app, PImage image, String type, float spawnX, float spawnY, float health, float speed, float armour, float manaGainedOnKill, List<PVector> path) {
         this.app = app;
@@ -42,8 +42,22 @@ public class Enemy {
             this.deathAnimationFrames.add(app.gremlinDeathImg3);
             this.deathAnimationFrames.add(app.gremlinDeathImg4);
             this.deathAnimationFrames.add(app.gremlinDeathImg5);
+            this.frozenImage = app.frozenGremlinImg;
+        } else if ("beetle".equals(type)) {
+            this.deathAnimationFrames.add(app.beetleDeathImg1);
+            this.deathAnimationFrames.add(app.beetleDeathImg2);
+            this.deathAnimationFrames.add(app.beetleDeathImg3);
+            this.deathAnimationFrames.add(app.beetleDeathImg4);
+            this.deathAnimationFrames.add(app.beetleDeathImg5);
+            this.frozenImage = app.frozenBeetleImg;
+        } else if ("worm".equals(type)) {
+            this.deathAnimationFrames.add(app.wormDeathImg1);
+            this.deathAnimationFrames.add(app.wormDeathImg2);
+            this.deathAnimationFrames.add(app.wormDeathImg3);
+            this.deathAnimationFrames.add(app.wormDeathImg4);
+            this.deathAnimationFrames.add(app.wormDeathImg5);
+            this.frozenImage = app.frozenWormImg;
         }
-            
     }
 
     public void move() {
@@ -104,11 +118,9 @@ public class Enemy {
 
     public void updateFreeze() {
         if (freezeTimer > 0) {
-            System.out.println("Updating freeze timer: " + freezeTimer); // Debug line
             freezeTimer -= 1f / App.FPS;
         }
-        if (freezeTimer < 0) { // New condition to reset freezeTimer
-            System.out.println("Resetting freeze timer"); // Debug line
+        if (freezeTimer < 0) { 
             freezeTimer = 0;
         }
     }
@@ -137,7 +149,11 @@ public class Enemy {
                 deathAnimationFrameCounter++;
             }
         } else {
-            app.image(image, position.x, position.y);
+            if (freezeTimer > 0) {
+                app.image(frozenImage, position.x, position.y);
+            } else {
+                app.image(image, position.x, position.y);
+            }
             drawHealthBar();
         }
     }

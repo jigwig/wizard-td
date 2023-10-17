@@ -55,13 +55,15 @@ public class Tower {
     }
     
     public void applyUpgrades(List<String> selectedUpgrades, int playerMana) {
-        for (String upgrade : new ArrayList<>(selectedUpgrades)) { // Create a copy
+        for (String upgrade : new ArrayList<>(selectedUpgrades)) { // Create a copy to avoid ConcurrentModificationException
             boolean success = upgrade(upgrade, playerMana);
             if(success) {
                 selectedUpgrades.remove(upgrade); // Remove only if upgrade was successful
+                playerMana = (int)app.manaSystem.getCurrentMana(); // Refresh playerMana after a successful upgrade
             }
         }
     }
+    
     
     
 

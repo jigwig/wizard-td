@@ -19,8 +19,8 @@ public class Buttons {
         this.description = description;
         this.hotkey = hotkey;
         this.cost = cost;
-        this.width = 30; //  width for now
-        this.height = 30; // arbitrary height for now
+        this.width = 30; 
+        this.height = 30; 
     }
 
     public void draw() {

@@ -23,6 +23,8 @@ public class App extends PApplet {
     public static final int FPS = 60;
 
     public boolean isGameLost = false;
+    public boolean isGameWon = false;
+
 
 
     public String configPath;
@@ -56,6 +58,19 @@ public class App extends PApplet {
     public PImage gremlinDeathImg3;
     public PImage gremlinDeathImg4;
     public PImage gremlinDeathImg5;
+    public PImage beetleDeathImg1;
+    public PImage beetleDeathImg2;
+    public PImage beetleDeathImg3;
+    public PImage beetleDeathImg4;
+    public PImage beetleDeathImg5;
+    public PImage wormDeathImg1;
+    public PImage wormDeathImg2;
+    public PImage wormDeathImg3;
+    public PImage wormDeathImg4;
+    public PImage wormDeathImg5;
+    public PImage frozenGremlinImg;
+    public PImage frozenBeetleImg;
+    public PImage frozenWormImg;
     
 
     public UserInterface userInterface;
@@ -69,9 +84,6 @@ public class App extends PApplet {
     public List<Enemy> activeMonsters = new ArrayList<>();
     public Pathfinder pathfinder;
     public ManaSystem manaSystem;
-
-
-
 
 
     public App() {
@@ -119,6 +131,20 @@ public class App extends PApplet {
         gremlinDeathImg3 = loadImage("src/main/resources/WizardTD/gremlin3.png");
         gremlinDeathImg4 = loadImage("src/main/resources/WizardTD/gremlin4.png");
         gremlinDeathImg5 = loadImage("src/main/resources/WizardTD/gremlin5.png");
+        beetleDeathImg1 = loadImage("src/main/resources/WizardTD/beetle1.png");
+        beetleDeathImg2 = loadImage("src/main/resources/WizardTD/beetle2.png");
+        beetleDeathImg3 = loadImage("src/main/resources/WizardTD/beetle3.png");
+        beetleDeathImg4 = loadImage("src/main/resources/WizardTD/beetle4.png");
+        beetleDeathImg5 = loadImage("src/main/resources/WizardTD/beetle5.png");
+        wormDeathImg1 = loadImage("src/main/resources/WizardTD/worm1.png");
+        wormDeathImg2 = loadImage("src/main/resources/WizardTD/worm2.png");
+        wormDeathImg3 = loadImage("src/main/resources/WizardTD/worm3.png");
+        wormDeathImg4 = loadImage("src/main/resources/WizardTD/worm4.png");
+        wormDeathImg5 = loadImage("src/main/resources/WizardTD/worm5.png");
+        frozenGremlinImg = loadImage("src/main/resources/WizardTD/frozenGremlin.png");
+        frozenBeetleImg = loadImage("src/main/resources/WizardTD/frozenBeetle.png");
+        frozenWormImg = loadImage("src/main/resources/WizardTD/frozenWorm.png");
+
 
         
         String layoutFileName = configReader.getLayout();
@@ -174,8 +200,9 @@ public class App extends PApplet {
      * Draw all elements in the game by current frame.
      */
 	@Override
-    public void draw() {
-        if (!isGameLost) {
+public void draw() {
+    if (!isGameLost) {
+        if (!isGameWon) {
             background(132, 115, 74, 225);
 
             // Always draw the game board, regardless of whether the game is paused or not
@@ -195,21 +222,34 @@ public class App extends PApplet {
             }
 
             // Always draw user interface elements
-        userInterface.draw(mouseX, mouseY);
+            userInterface.draw(mouseX, mouseY);
 
-        waveManager.draw();
+            waveManager.draw();
 
-        manaSystem.draw(WIDTH, TOPBAR);
-        
+            manaSystem.draw(WIDTH, TOPBAR);
+
+            // Check if all waves are completed and there are no active monsters
+            if (waveManager.allWavesCompleted() && activeMonsters.isEmpty()) {
+                isGameWon = true;
+            }
 
         } else {
             textSize(50);
-            fill(255, 0, 0);  // Set the text color to red
-            text("YOU LOST", BOARD_WIDTH * CELLSIZE / 2, BOARD_WIDTH * CELLSIZE / 2);
+            fill(0, 255, 0);  // Set the text color to green
+            text("YOU WIN", (BOARD_WIDTH * CELLSIZE / 2) - 80, BOARD_WIDTH * CELLSIZE / 2);
         }
-
-
+    } else {
+        textSize(50);
+        fill(255, 0, 0);  // Set the text color to red
+        text("YOU LOST", (BOARD_WIDTH * CELLSIZE / 2) - 90, BOARD_WIDTH * CELLSIZE / 2);
+        
+        
+        textSize(15);
+        fill(255, 255, 255);  // Set the text color to white
+        text("Restart game by pressing R", (BOARD_WIDTH * CELLSIZE / 2) - 80, (BOARD_WIDTH * CELLSIZE / 2) + 60);
     }
+}
+
 
     // NEW: Your tick function
     private void tick() {
